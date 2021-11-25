@@ -1,11 +1,11 @@
-#include "linked_list.h"
+#include "..\include\linked_list.h"
 /*
  * Linked list
  */
 
-#include <stdio.h>		/* printf */
-#include <stdlib.h>		/* malloc, free */
-#include <assert.h>		/* assert */
+#include <stdio.h>    /* printf */
+#include <stdlib.h>   /* malloc, free */
+#include <assert.h>   /* assert */
 
 /* functions to create lists */
 node *make_node (int v, node * q)
@@ -21,7 +21,7 @@ node *make_node (int v, node * q)
 }
 
 /* free all nodes in the list p */
-node* free_list (node * p)
+node * free_list (node * p)
 {
   node *q = p;
   while (q != NULL)
@@ -30,50 +30,43 @@ node* free_list (node * p)
       free (q);
       q = t;
     }
-    return q;
+  return q;
 }
-
 
 /* print list to console */
 void print_list (node * p)
 {
-   //exercise 1
-     if (p->next !=NULL){
-      printf("%d", p->value);
-      print_list (p->next);
-     }  
-     else
-        printf ("%d", p->value); //print the value in the node 
- }
+  node *current_node = p; //local pointer equal to the linked list pointer p.  
+
+    if (current_node->next == NULL) //base case
+    {
+        printf("%d\n", current_node->value);
+    }
+    else //recursive step
+    {
+      printf("%d\n", current_node->value);
+      print_list(current_node->next);
+    }
+}
 
 int sum_squares (node * p)
 {
-    //excercise 2
-    if (p->next != NULL) //if we have an empty list 
-       return (square (p->value) + sum_squares (p->next));
-    else
-       return (square (p->value));
-}
 
+  if (p == NULL)
+    return 0;
+  else if (p->next == NULL)
+    return square(p->value); //base case
+  else
+    return sum_squares(p->next)+square(p->value); //recursive step
+}
 
 node *map (node * p, int (*f) (int))
 {
-    //excercise 3
-    int (*sf)(int);
-    sf = square;
-    int x;
-    x = sf(p->value);
-    node* sq_list = make_node (x, NULL);
-
-    if (p->next !=NULL)
-    {
-      sq_list->next = map (p->next, square);
-      return sq_list;
-    } 
-    else
-    {
-      return 0;
-    }
+  if (p == NULL)
+    return p; // base case
+  else 
+    return make_node((*f)(p->value), map(p->next,f)); //recursive step. Calls "square function" to p->value and uses recursion 
+                                                      //fill out the rest of the tree 
 }
 
 int square (int x)
